@@ -44,7 +44,7 @@ python main.py
 
 ### Contributing
 
-We welcome contributions to improve the Google Search CLI! To get started:
+I welcome contributions to improve the Google Search CLI! To get started:
 
 1. **Fork the Repository**: Click on the "Fork" button at the top right of this page.
 2. **Clone Your Fork**:
