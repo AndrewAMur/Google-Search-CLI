@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 from InquirerPy import inquirer
 import webbrowser
+import tldextract
 
 load_dotenv()
 
@@ -28,7 +29,11 @@ def search_google(query, start=0):
         for result in data.get("organic_results", []):
             title = result.get("title", "No title")
             link = result.get("link")
-            results.append((title, link))
+            # Extract domain name and extension
+            domain = tldextract.extract(link).domain
+            ext = tldextract.extract(link).suffix
+            domain_ext = f"{domain}.{ext}"
+            results.append((title, domain_ext, link))
         
         return results
     except requests.RequestException as e:
@@ -50,21 +55,32 @@ def main():
                 print("No results found or an error occurred.")
                 break
             
-            choices = [(f"{title} - {link}", link) for title, link in results]
-            choices.append(("Next Page", "next"))
-            choices.append(("New Search", "new_search"))
-            choices.append(("Quit", "quit"))
+            # Format choices
+            choices = [
+                f"{title} - {domain_ext}"
+                for title, domain_ext, link in results
+            ]
+            choices.append("Next Page")
+            choices.append("New Search")
+            choices.append("Quit")
 
-            selected_text, selected_value = inquirer.select(message="Select an option:", choices=choices).execute()
-            
-            if selected_value == "quit":
+            selected_option = inquirer.select(
+                message="Select an option:",
+                choices=choices
+            ).execute()
+
+            if selected_option == "Quit":
                 return
-            elif selected_value == "new_search":
+            elif selected_option == "New Search":
                 break
-            elif selected_value == "next":
+            elif selected_option == "Next Page":
                 start += 10
             else:
-                webbrowser.open(selected_value)
+                # Find the selected link based on the title
+                for title, domain_ext, link in results:
+                    if f"{title} - {domain_ext}" == selected_option:
+                        webbrowser.open(link)
+                        break
 
 if __name__ == "__main__":
     main()
