@@ -42,6 +42,12 @@ Execute the following command to start the program:
 python main.py
 ```
 
+### Example
+
+<img src='Screenshots/first.png'>
+<img src='Screenshots/second.png'>
+<img src='Screenshots/third.png'>
+
 ### Contributing
 
 I welcome contributions to improve the Google Search CLI! To get started:
